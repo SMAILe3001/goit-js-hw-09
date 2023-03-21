@@ -1,11 +1,13 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const btnStartEl = document.querySelector('[data-start]');
 const timerDaysEl = document.querySelector('[data-days]');
 const timerHoursEl = document.querySelector('[data-hours]');
 const timerMintesEl = document.querySelector('[data-minutes]');
 const timerSecondsEl = document.querySelector('[data-seconds]');
+const inputEl = document.querySelector('#datetime-picker');
 
 btnStartEl.disabled = true;
 btnStartEl.addEventListener('click', startTimer);
@@ -20,10 +22,11 @@ const options = {
 
     if (currentDate > selectedDates[0]) {
       btnStartEl.disabled = true;
-      window.alert('Please choose a date in the future');
+      Notify.warning('Please choose a date in the future');
       return;
     }
     btnStartEl.disabled = false;
+    Notify.success('Now you can start the timer');
   },
 };
 
@@ -60,6 +63,7 @@ function updateTimer({ days, hours, minutes, seconds }) {
 }
 
 function startTimer() {
+  inputEl.disabled = true;
   timerId = setInterval(() => {
     const differenceDate = flatPickr.selectedDates[0] - new Date();
     btnStartEl.disabled = true;

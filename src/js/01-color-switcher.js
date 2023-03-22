@@ -5,22 +5,25 @@ let identifier = 0;
 
 btnColorStart.addEventListener('click', colorChangeStart);
 btnColorStop.addEventListener('click', colorChangeStop);
-btnColorStop.disabled = true;
+btnRevers(false);
+
+function btnRevers(stan) {
+  btnColorStart.disabled = stan;
+  btnColorStop.disabled = !stan;
+}
 
 function colorChangeStart() {
   identifier = setInterval(() => {
     bodyEl.style.background = getRandomHexColor();
   }, 2000);
 
-  btnColorStart.disabled = true;
-  btnColorStop.disabled = false;
+  btnRevers(true);
 }
 
 function colorChangeStop() {
   clearInterval(identifier);
 
-  btnColorStop.disabled = true;
-  btnColorStart.disabled = false;
+  btnRevers(false);
 }
 
 function getRandomHexColor() {

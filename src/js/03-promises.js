@@ -5,38 +5,40 @@ const formEl = document.querySelector('.form');
 formEl.addEventListener('submit', onFormSubmit);
 
 function createPromise(position, delay) {
-  const promise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const shouldResolve = Math.random() > 0.3;
 
     setTimeout(() => {
       if (shouldResolve) {
-        resolve();
+        resolve({ position, delay });
       } else {
-        reject();
+        reject({ position, delay });
       }
     }, delay);
   });
-
-  promise
-    .then(() => {
-      Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
-    })
-    .catch(() => {
-      Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-    });
 }
 
 function onFormSubmit(e) {
   e.preventDefault();
 
-  const firstDelay = Number(formEl.querySelector('input[name="delay"]').value);
-  const stepDelay = Number(formEl.querySelector('input[name="step"]').value);
-  const amount = Number(formEl.querySelector('input[name="amount"]').value);
+  const firstDelay = Number(e.currentTarget.delay.value);
+  const stepDelay = Number(e.currentTarget.step.value);
+  const amount = Number(e.currentTarget.amount.value);
+
   let premixExecutionDelay = firstDelay;
 
   for (let i = 1; i <= amount; i += 1) {
-    createPromise(i, premixExecutionDelay);
+    createPromise(i, premixExecutionDelay).then(onSuccsess).catch(onError);
+
     premixExecutionDelay = firstDelay + stepDelay * i;
   }
-  formEl.reset();
+  e.currentTarget.reset();
+}
+
+function onSuccsess({ position, delay }) {
+  Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+}
+
+function onError({ position, delay }) {
+  Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
 }

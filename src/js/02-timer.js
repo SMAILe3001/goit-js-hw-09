@@ -17,10 +17,10 @@ const options = {
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDates) {
-    const currentDate = new Date();
+  onClose([selectedDates]) {
+    const currentDate = Date.now();
 
-    if (currentDate > selectedDates[0]) {
+    if (currentDate > selectedDates) {
       btnStartEl.disabled = true;
       Notify.warning('Please choose a date in the future');
       return;
@@ -65,7 +65,7 @@ function updateTimer({ days, hours, minutes, seconds }) {
 function startTimer() {
   inputEl.disabled = true;
   timerId = setInterval(() => {
-    const differenceDate = flatPickr.selectedDates[0] - new Date();
+    const differenceDate = flatPickr.selectedDates[0] - Date.now();
     btnStartEl.disabled = true;
 
     if (differenceDate < 0) {
